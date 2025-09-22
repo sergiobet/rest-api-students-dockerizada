@@ -14,7 +14,7 @@ RUN apk add --no-cache --virtual .build-deps \
         icu-dev \
         libxml2-dev \
     && apk add --no-cache \
-        libgd \
+        libgd libzip \
     && docker-php-ext-install -j$(nproc) pdo_mysql mbstring zip exif pcntl \
     && docker-php-ext-configure gd --with-jpeg --with-freetype --with-webp \
     && docker-php-ext-install -j$(nproc) gd \
@@ -36,7 +36,7 @@ FROM base AS vendor
 
 # Copiar solo los archivos de dependencias para aprovechar el caché de Docker
 COPY composer.json composer.lock ./
-RUN composer install --optimize-autoloader --no-dev --no-interaction --no-progress
+RUN composer install --optimize-autoloader --no-dev --no-interaction --no-progress --no-scripts
 
 # ----------------- Etapa Final de Producción -----------------
 FROM base AS production
