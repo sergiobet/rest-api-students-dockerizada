@@ -58,5 +58,10 @@ RUN chown -R www:www storage bootstrap/cache && \
 # Cambiar al usuario no-root
 USER www
 
-EXPOSE 9000
+# Copiar y dar permisos al entrypoint de producción
+COPY docker/prod/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+EXPOSE 10000
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["php-fpm"]

@@ -37,7 +37,7 @@ RUN apk add --no-cache --virtual .build-deps \
 #     && docker-php-ext-enable redis
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY /docker/dev/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
