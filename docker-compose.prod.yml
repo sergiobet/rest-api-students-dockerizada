@@ -12,9 +12,9 @@ services:
       - APP_DEBUG=false
       - APP_URL=https://tu-dominio.onrender.com # Reemplaza con tu URL de producción
       - LOG_CHANNEL=stderr # Render y otros servicios prefieren logs en la salida estándar
-      - DB_CONNECTION=mysql
-      - DB_HOST=db # Este será el nombre del servicio de DB en Render
-      - DB_PORT=3306
+      - DB_CONNECTION=pgsql
+      - DB_HOST=${DB_HOST} # Esta variable la proveerá Render
+      - DB_PORT=${DB_PORT} # Esta variable la proveerá Render
       # Estas variables se deben configurar en el panel de Render, no aquí.
       - DB_DATABASE=${DB_DATABASE}
       - DB_USERNAME=${DB_USERNAME}

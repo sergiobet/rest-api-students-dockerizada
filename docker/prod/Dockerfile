@@ -1,9 +1,9 @@
 FROM php:8.2-fpm-alpine AS base
 
 # Instalar dependencias del sistema y extensiones de PHP
-RUN apk add --no-cache --virtual .build-deps \
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
         $PHPIZE_DEPS \
-        mariadb-connector-c-dev \
+        postgresql-dev \
         libzip-dev \
         oniguruma-dev \
         libpng-dev \
@@ -14,8 +14,8 @@ RUN apk add --no-cache --virtual .build-deps \
         icu-dev \
         libxml2-dev \
     && apk add --no-cache \
-        libgd libzip \
-    && docker-php-ext-install -j$(nproc) pdo_mysql mbstring zip exif pcntl \
+        libgd libzip postgresql-libs \
+    && docker-php-ext-install -j$(nproc) pdo_pgsql mbstring zip exif pcntl \
     && docker-php-ext-configure gd --with-jpeg --with-freetype --with-webp \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install opcache \
