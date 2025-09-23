@@ -30,7 +30,8 @@ services:
     container_name: webserver-prod
     restart: unless-stopped
     ports:
-      - "10000:80"
+      # Este mapeo es para pruebas locales. Render lo ignora y usa la configuración de su panel.
+      - "80:80"
       - "443:443"
     volumes:
       # El código de la app se comparte para que Nginx sirva los archivos estáticos
