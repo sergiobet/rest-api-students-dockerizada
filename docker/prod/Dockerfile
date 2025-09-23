@@ -55,12 +55,12 @@ RUN php artisan config:cache && \
 RUN chown -R www:www storage bootstrap/cache && \
     chmod -R 775 storage bootstrap/cache
 
-# Cambiar al usuario no-root
-USER www
-
 # Copiar y dar permisos al entrypoint de producción
 COPY docker/prod/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Cambiar al usuario no-root
+USER www
 
 EXPOSE 9000
 ENTRYPOINT ["entrypoint.sh"]
