@@ -62,6 +62,6 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 # Cambiar al usuario no-root
 USER www
 
-EXPOSE 9000
+EXPOSE 80
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["php-fpm"]
+CMD ["php-fpm", "nginx", "-g", "daemon off;"]
