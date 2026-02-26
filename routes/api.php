@@ -1,22 +1,33 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\studentController;
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
+use App\Models\User;
 
-Route::get('/students/{id}', [studentController::class, 'show']);
+// /home/ragnarok/rest-api-students/routes/api.php
 
-Route::get('/students', [studentController::class, 'index']);
+Route::post('/login', function (Request $request) { // Correcto, usa Route::post
+    $user = User::where('email', $request->email)->first();
 
-Route::post('/students', [studentController::class, 'store']);
+    if (! $user || ! Hash::check($request->password, $user->password)) {
+        return response()->json(['message' => 'Credenciales inválidas'], 401);
+    }
 
-Route::delete('/students/{id}', [studentController::class, 'delete']);
-
-Route::put('/students/{id}', [studentController::class, 'update']);
-
-
-
+    return response()->json([
+        'token' => $user->createToken('api-token')->plainTextToken,
+    ]);
+})->name('login');
 
 
+// --- Rutas de API Versionadas ---
+// Carga las rutas de la versión 1
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    require __DIR__ . '/api/v1.php';
+});
+
+// Carga las rutas de la versión 2
+// Route::prefix('v2')->middleware('auth:sanctum')->group(function () {
+//     require __DIR__ . '/api/v2.php';
+// });
