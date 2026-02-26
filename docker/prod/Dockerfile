@@ -1,7 +1,7 @@
 FROM php:8.2-fpm-alpine AS base
 
 # Instalar dependencias del sistema y extensiones de PHP
-RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+RUN apk add --no-cache --virtual .build-deps \
         $PHPIZE_DEPS \
         postgresql-dev \
         libzip-dev \
@@ -45,23 +45,13 @@ FROM base AS production
 COPY --chown=www:www . .
 COPY --from=vendor /var/www/html/vendor ./vendor
 
-# Optimizar Laravel para producción
-RUN php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
-    php artisan event:cache
-
-# Ajustar permisos para que Laravel pueda escribir en los directorios necesarios
-RUN chown -R www:www storage bootstrap/cache && \
-    chmod -R 775 storage bootstrap/cache
-
 # Copiar y dar permisos al entrypoint de producción
 COPY docker/prod/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Cambiar al usuario no-root
-USER www
+USER www:www
 
-EXPOSE 80
+EXPOSE 9000
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["php-fpm", "nginx", "-g", "daemon off;"]
+CMD ["php-fpm"]

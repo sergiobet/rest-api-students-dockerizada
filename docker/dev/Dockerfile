@@ -25,7 +25,8 @@ RUN apk add --no-cache --virtual .build-deps \
         sqlite-dev \
         readline-dev \
     && apk add --no-cache \
-        git curl nano vim net-tools iputils libgd \
+        git curl nano vim net-tools iputils libgd libzip \
+        mariadb-client \
     && docker-php-ext-install -j$(nproc) pdo_mysql mbstring zip exif pcntl \
     && docker-php-ext-configure gd --with-jpeg --with-freetype --with-webp \
     && docker-php-ext-install -j$(nproc) gd \

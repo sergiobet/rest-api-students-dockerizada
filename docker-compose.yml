@@ -22,9 +22,8 @@ services:
             - DB_USERNAME=sail
             - DB_PASSWORD=password
 
-        # depends_on:
-        #     - db
-        #     - web
+        depends_on:
+            - db
 
     web:
         # build:
@@ -36,7 +35,7 @@ services:
             - "9000:80"
             # - "443:443"
         volumes:
-            - ./:/var/www/html
+            - ./:/var/www/html:ro # Montamos el código como solo lectura para Nginx
             - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
         depends_on:
             - app
@@ -45,7 +44,7 @@ services:
         image: mysql:8.0
         container_name: database
         ports:
-            - "3310:3306"
+            - "3311:3306"
         environment:
             MYSQL_ROOT_PASSWORD: rootpassword
             MYSQL_DATABASE: laravel
