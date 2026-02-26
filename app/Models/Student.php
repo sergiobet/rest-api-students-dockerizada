@@ -26,3 +26,5 @@ class Student extends Model
 
     use SoftDeletes;
 }
+
+?>
