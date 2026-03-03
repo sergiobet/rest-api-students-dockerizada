@@ -3,7 +3,6 @@ services:
         build:
             context: .
             dockerfile: docker/dev/Dockerfile
-        image:  php:8.2-fpm-alpine
         container_name: laravel-app
         volumes:
             - ./:/var/www/html # Mount your application code

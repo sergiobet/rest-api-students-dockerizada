@@ -5,7 +5,7 @@ set -e
 
 # Instalar dependencias de Composer si no están presentes
 if [ ! -f "vendor/autoload.php" ]; then
-    composer install --optimize-autoloader --no-dev
+    composer install --optimize-autoloader
 fi
 
 # Ejecutar el comando principal del contenedor (php-fpm)
