@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
@@ -23,7 +22,7 @@ class AuthTest extends TestCase
         // 1. Preparación (Arrange): Creamos un usuario en la DB de pruebas
         $password = 'password123';
         $user = User::factory()->create([
-            'password' => Hash::make($password),
+            'password' => $password,
         ]);
 
         // 2. Acción (Act): Hacemos una petición POST al endpoint de login
@@ -44,7 +43,7 @@ class AuthTest extends TestCase
     {
         // 1. Preparación
         $user = User::factory()->create([
-            'password' => Hash::make('password_valido'),
+            'password' => 'password_valido',
         ]);
 
         // 2. Acción
