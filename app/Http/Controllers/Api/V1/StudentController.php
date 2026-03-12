@@ -10,11 +10,32 @@ use App\Http\Resources\Api\V1\StudentResource;
 
 class StudentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::all();
+        $query = Student::query();
+
+        // Filtrado por nombre
+        if ($request->has('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%')
+                ->orWhere('last_name', 'like', '%' . $request->name . '%');
+        }
+
+        // Filtrado por email
+        if ($request->has('email')) {
+            $query->where('email', 'like', '%' . $request->email . '%');
+        }
+
+        // Ordenación básica
+        $sortField = $request->get('sort_by', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+        $query->orderBy($sortField, $sortOrder);
+
+        // Paginación (por defecto 10 elementos)
+        $perPage = $request->get('per_page', 10);
+        $students = $query->paginate($perPage);
+
         // StudentResource::collection se encarga de transformar una colección de modelos.
-        // Laravel devolverá un array JSON vacío si no hay estudiantes, lo cual es correcto.
+        // Laravel devolverá metadatos de paginación automáticamente.
         return StudentResource::collection($students)->additional(['status' => 200]);
     }
 
