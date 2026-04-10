@@ -1,25 +1,12 @@
 <?php
 
-use App\Http\Controllers\studentController;
+use App\Http\Controllers\Api\V1\AuthController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
-use App\Models\User;
 
 // /home/ragnarok/rest-api-students/routes/api.php
 
-Route::post('/login', function (Request $request) { // Correcto, usa Route::post
-    $user = User::where('email', $request->email)->first();
-
-    if (! $user || ! Hash::check($request->password, $user->password)) {
-        return response()->json(['message' => 'Credenciales inválidas'], 401);
-    }
-
-    return response()->json([
-        'token' => $user->createToken('api-token')->plainTextToken,
-    ]);
-})->name('login');
-
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 // --- Rutas de API Versionadas ---
 // Carga las rutas de la versión 1
