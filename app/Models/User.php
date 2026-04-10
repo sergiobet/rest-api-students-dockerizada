@@ -7,8 +7,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OpenApi\Attributes as OA;
+
+// Esto es para la documentación de la API con Swagger
+#[OA\Schema(
+    schema: 'User',
+    title: 'User',
+    description: 'Modelo de Usuario',
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', readOnly: true, example: 1),
+        new OA\Property(property: 'name', type: 'string', example: 'Juan Pérez'),
+        new OA\Property(property: 'email', type: 'string', format: 'email', example: 'juan@example.com'),
+        new OA\Property(property: 'created_at', type: 'string', format: 'date-time', readOnly: true),
+        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time', readOnly: true)
+    ]
+)]
 
 class User extends Authenticatable
 {
