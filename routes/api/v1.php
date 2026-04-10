@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\ProfileController;
 
 // Rutas para el perfil de usuario (v1)
 Route::get('/profile', [ProfileController::class, 'show']);
+Route::put('/profile', [ProfileController::class, 'update']);
 
 // Rutas de Estudiantes (v1)
 Route::apiResource('students', StudentController::class);
