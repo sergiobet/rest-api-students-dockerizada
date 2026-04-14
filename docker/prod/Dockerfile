@@ -11,6 +11,14 @@ RUN install-php-extensions \
     gd \
     opcache
 
+# Instalamos libcap2-bin para poder quitarle las "capacidades" a FrankenPHP.
+# Esto es necesario para que Render nos permita ejecutar el binario.
+RUN apt-get update && apt-get install -y libcap2-bin \
+    && setcap -r /usr/local/bin/frankenphp \
+    && apt-get purge -y libcap2-bin \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
+
 #Configuramos PHP para modo producción
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
