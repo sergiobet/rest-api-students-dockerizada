@@ -10,11 +10,17 @@ use OpenApi\Attributes as OA;
     description: 'Documentación de la API de gestión de estudiantes con autenticación Sanctum'
 )]
 
-//Documentación de servidor para la API
+//Ruta de la documentación de la API en desarrollo
 #[OA\Server(
     url: 'http://localhost:9000/api', 
     description: 'Servidor de Desarrollo'
 ) ]
+
+//Ruta de la documentación de la API en producción
+#[OA\Server(
+    url: 'https://tu-app.onrender.com/api', 
+    description: 'Servidor de Producción'
+)]
 
 //Documentación de seguridad para la API
 #[OA\SecurityScheme(

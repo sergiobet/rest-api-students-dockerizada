@@ -1,57 +1,40 @@
-FROM php:8.2-fpm-alpine AS base
+#Imagen base moderna y ligera
+FROM dunglas/frankenphp:latest-php8.2-alpine AS base
 
-# Instalar dependencias del sistema y extensiones de PHP
-RUN apk add --no-cache --virtual .build-deps \
-        $PHPIZE_DEPS \
-        postgresql-dev \
-        libzip-dev \
-        oniguruma-dev \
-        libpng-dev \
-        jpeg-dev \
-        libjpeg-turbo-dev \
-        freetype-dev \
-        libwebp-dev \
-        icu-dev \
-        libxml2-dev \
-    && apk add --no-cache \
-        libgd libzip postgresql-libs \
-    && docker-php-ext-install -j$(nproc) pdo_pgsql mbstring zip exif pcntl \
-    && docker-php-ext-configure gd --with-jpeg --with-freetype --with-webp \
-    && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install opcache \
-    && apk del .build-deps \
-    && rm -rf /var/cache/apk/*
+#Instalamos las herramientas necesarias para que Laravel hable con PostgreSQL
+RUN install-php-extensions \
+    pdo_pgsql \
+    mbstring \
+    zip \
+    exif \
+    pcntl \
+    gd \
+    opcache
 
-# Copiar Composer
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-
-# Crear usuario no-root
-RUN addgroup -g 1000 -S www && \
-    adduser -u 1000 -S www -G www
+#Configuramos PHP para modo producción
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 WORKDIR /var/www/html
 
-# ----------------- Etapa de Compilación de Dependencias -----------------
-FROM base AS vendor
-
-# Copiar solo los archivos de dependencias para aprovechar el caché de Docker
+#Instalamos Composer y bajamos las librerías
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 COPY composer.json composer.lock ./
-RUN composer install --optimize-autoloader --no-dev --no-interaction --no-progress --no-scripts
+RUN composer install --optimize-autoloader --no-dev --no-interaction --no-scripts
 
-# ----------------- Etapa Final de Producción -----------------
-FROM base AS production
+#Copiamos el código al contenedor y damos permisos de escritura a Laravel
+COPY . .
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Copiar el código de la aplicación y las dependencias de las etapas anteriores
-COPY --chown=www:www . .
-COPY --from=vendor /var/www/html/vendor ./vendor
+#Variables de entorno específicas para FrankenPHP
+ENV SERVER_NAME=:10000
+ENV FRANKENPHP_CONFIG="import /usr/local/etc/frankenphp/Caddyfile"
 
-# Copiar y dar permisos al entrypoint de producción
+#Script de inicio
 COPY docker/prod/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Cambiar al usuario no-root
-USER www:www
-
-EXPOSE 9000
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["php-fpm"]
+
+#Comando para iniciar el servidor de FrankenPHP
+CMD ["frankenphp", "php-server"]
+

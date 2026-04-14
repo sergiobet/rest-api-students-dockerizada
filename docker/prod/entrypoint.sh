@@ -1,24 +1,18 @@
 #!/bin/sh
 
-# Salir inmediatamente si un comando falla.
+#Salir inmediatamente si algún comando falla
 set -e
 
-# El rol del contenedor (app, scheduler, etc.). Por defecto es 'app'.
-role=${CONTAINER_ROLE:-app}
+#Ejecutar las migraciones automáticamente
+echo "Ejecutando migraciones..."
+php artisan migrate --force
 
-if [ "$role" = "app" ]; then
-    # Esperar a que la base de datos esté lista (opcional pero recomendado)
-    # En Render, el servicio de la base de datos puede tardar un momento en iniciar.
-    # Este es un ejemplo simple, podrías necesitar un script más robusto como wait-for-it.sh
-    # Por ahora, una simple espera puede ser suficiente.
-    # sleep 10
+#Optimizar el rendimiento de la API
+echo "Optimizando caché..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
-    # Ejecutar migraciones y optimizaciones de Laravel
-    php artisan migrate --force
-    php artisan config:cache
-    php artisan route:cache
-    php artisan view:cache
-
-    # Iniciar PHP-FPM
-    exec php-fpm
-fi
+#Entregar el control al comando final (FrankenPHP)
+echo "Iniciando FrankenPHP..."
+exec "$@"
