@@ -1,5 +1,5 @@
 #Imagen base moderna y ligera
-FROM dunglas/frankenphp:latest-php8.2-alpine AS base
+FROM dunglas/frankenphp:php8.2 AS base
 
 #Instalamos las herramientas necesarias para que Laravel hable con PostgreSQL
 RUN install-php-extensions \
