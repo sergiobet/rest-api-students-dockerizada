@@ -18,7 +18,7 @@ use OpenApi\Attributes as OA;
 
 //Ruta de la documentación de la API en producción
 #[OA\Server(
-    url: 'https://tu-app.onrender.com/api', 
+    url: 'https://rest-api-students.onrender.com/api', 
     description: 'Servidor de Producción'
 )]
 
