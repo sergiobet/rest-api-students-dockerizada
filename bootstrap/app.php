@@ -15,7 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Le indicamos a Laravel que confíe en los proxies
+        $middleware->trustProxies(at: '*'); //* El '*' significa que confiamos en cualquier proxy que nos envíe Render
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Capturamos el error de "No encontrado" (404)

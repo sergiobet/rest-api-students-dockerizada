@@ -20,7 +20,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(UrlGenerator $url): void
     {
-         if (env('APP_ENV') == 'production') {
+        /**  
+            * * Esto es necesario para el despliege en Render, usando el plan gratuito
+        */
+        
+        //Si la aplicación está en producción, forzamos que todas las URLs generadas sean HTTPS
+        if (app()->isProduction()) {
             $url->forceScheme('https');
         }
     }
