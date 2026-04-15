@@ -5,7 +5,7 @@ set -e
 
 #Ejecutar las migraciones automáticamente
 echo "Ejecutando migraciones..."
-php artisan migrate --force -vvv
+php artisan migrate --force #-vvv Habilitar la flag -vvv solo para depuración
 
 #Generar documentación de Swagger antes de optimizar para evitar conflictos por las políticas de seguridad de Render
 echo "Generando documentación de Swagger..."
