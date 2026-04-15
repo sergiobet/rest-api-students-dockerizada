@@ -44,5 +44,5 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 
 #Comando para iniciar el servidor de FrankenPHP
-CMD ["frankenphp", "php-server"]
+CMD ["frankenphp", "php-server", "--listen", ":10000"]
 
