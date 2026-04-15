@@ -7,6 +7,10 @@ set -e
 echo "Ejecutando migraciones..."
 php artisan migrate --force -vvv
 
+#Generar documentación de Swagger antes de optimizar para evitar conflictos por las políticas de seguridad de Render
+echo "Generando documentación de Swagger..."
+php artisan l5-swagger:generate
+
 #Optimizar el rendimiento de la API
 echo "Optimizando caché..."
 php artisan config:cache
