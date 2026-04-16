@@ -5,7 +5,11 @@ set -e
 
 #Ejecutar las migraciones automáticamente
 echo "Ejecutando migraciones..."
-php artisan migrate --force #-vvv Habilitar la flag -vvv solo para depuración
+php artisan migrate --force
+
+#Ejecutar los seeders para cargar datos iniciales para las pruebas
+echo "Cargando datos iniciales (Seeders)..."
+php artisan db:seed --force
 
 #Generar documentación de Swagger antes de optimizar para evitar conflictos por las políticas de seguridad de Render
 echo "Generando documentación de Swagger..."

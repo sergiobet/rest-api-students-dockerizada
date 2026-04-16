@@ -9,6 +9,8 @@ class StudentSeeder extends Seeder
 {
     public function run(): void
     {
-        \App\Models\Student::factory(50)->create();
+        if (\App\Models\Student::count() === 0) {
+            \App\Models\Student::factory(50)->create();
+        }
     }
 }
